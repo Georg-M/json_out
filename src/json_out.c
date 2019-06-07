@@ -104,7 +104,6 @@ static void json_out(const json_object_t* obj, int level)
     json_type_t type    = obj->type;
     size_t length       = obj->length;
     void** data         = &((json_object_t*)obj)->data;
-    char tmp_buf[32]    = "";
 
     debug_trace_level = level;
     debug_trace_types[level] = type;
@@ -117,6 +116,7 @@ static void json_out(const json_object_t* obj, int level)
 
     for (int i=0; i<length; i++)
     {
+        static char tmp_buf[40];
         debug_trace_indexes[level] = i;
         const json_object_t* member = *((json_object_t**)data + i);
 
@@ -156,7 +156,7 @@ static void json_out(const json_object_t* obj, int level)
             break;
 
         default:
-            snprintf(tmp_buf, ARRAY_SIZE(tmp_buf), "%s%d", "ERROR: Unknown JSON type: ", type);
+            snprintf(tmp_buf, ARRAY_SIZE(tmp_buf), "ERROR: Unknown JSON type: %d", type);
             print_token_str((const char*)tmp_buf, "<", ">");
             break;
         }
